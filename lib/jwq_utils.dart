@@ -16,11 +16,9 @@ class AdjustableScrollController extends ScrollController {
       ScrollDirection scrollDirection = super.position.userScrollDirection;
       if (scrollDirection != ScrollDirection.idle) {
         double scrollEnd = super.offset +
-            (scrollDirection == ScrollDirection.reverse
-                ? extraScrollSpeed
-                : -extraScrollSpeed);
-        scrollEnd = min(super.position.maxScrollExtent,
-            max(super.position.minScrollExtent, scrollEnd));
+            (scrollDirection == ScrollDirection.reverse ? extraScrollSpeed : -extraScrollSpeed);
+        scrollEnd =
+            min(super.position.maxScrollExtent, max(super.position.minScrollExtent, scrollEnd));
         jumpTo(scrollEnd);
       }
     });
@@ -90,8 +88,7 @@ ButtonStyle elevatedButtonStyle(BuildContext context, {Color? color}) {
   );
 }
 
-Future<bool> confirm(BuildContext context,
-    [String title = 'Are you sure?']) async {
+Future<bool> confirm(BuildContext context, [String title = 'Are you sure?']) async {
   bool response = false;
   await showDialog(
       context: context,
@@ -141,15 +138,42 @@ Future<String?> inputText(BuildContext context,
               ),
               const SizedBox(height: 16),
               TextButton(
-                child: const Text('Ok'),
                 style: elevatedButtonStyle(context),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
+                child: const Text('Ok'),
               )
             ],
           ),
         );
       });
   return txt;
+}
+
+Future showError(BuildContext context, String title, String message) async {
+  await showDialog(
+    context: context,
+    builder: (builder) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+      );
+    },
+  );
+}
+
+String formatBytes(int bytes) {
+  if (bytes <= 0) {
+    return '0 B';
+  }
+  final int i = (log(bytes) / log(1024)).floor();
+  return '${(bytes * 100 / pow(1024, i)).round() / 100} ${['B', 'KB', 'MB', 'GB', 'TB'][i]}';
+}
+
+String formatOpBytes(int? bytes) => bytes == null ? '?' : formatBytes(bytes);
+
+String dateString(int secs) {
+  final iso = DateTime.fromMillisecondsSinceEpoch(secs * 1000).toLocal().toIso8601String();
+  return iso.substring(0, iso.indexOf('.')).replaceFirst('T', '\n');
 }
