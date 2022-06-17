@@ -34,7 +34,9 @@ class AdjustableScrollController extends ScrollController {
 
   @override
   void detach(ScrollPosition position) {
-    savedPos = offset;
+    if (positions.length == 1) {
+      savedPos = offset;
+    }
     super.detach(position);
   }
 }
@@ -60,8 +62,12 @@ class SplitView extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     if (screenWidth < menuWidth * 3) {
       return Scaffold(
-        appBar: AppBar(title: title),
-        drawer: drawer,
+        appBar: AppBar(
+          title: title,
+          leading: (ModalRoute.of(context)?.canPop ?? false) ? BackButton() : null,
+        ),
+        drawerEdgeDragWidth: screenWidth,
+        drawer: Drawer(child: drawer),
         body: body,
         floatingActionButton: floatingActionButton,
       );
