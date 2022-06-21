@@ -60,7 +60,7 @@ class SplitView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    if (screenWidth < menuWidth * 3) {
+    if (screenWidth / 3 < menuWidth) {
       return Scaffold(
         appBar: AppBar(
           title: title,
@@ -75,7 +75,7 @@ class SplitView extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(title: title),
         body: Row(children: [
-          SizedBox(width: menuWidth, child: drawer),
+          SizedBox(width: screenWidth / 3, child: drawer),
           Container(width: 0.5, color: Colors.black),
           Expanded(child: body),
         ]),
